@@ -20,6 +20,8 @@ app.use(cors());
 // Initialize the main project folder
 app.use(express.static('website'));
 
+// Setup Server
+
 const port = 8000;
 const server = app.listen(port, listening);
 
@@ -28,4 +30,18 @@ function listening() {
     console.log(`running on localhost: ${port}`);
 }
 
-// Setup Server
+// GET route, which returns the projectData
+app.get('/', function(res, req) {
+    res.send(projectData);
+})
+
+// POST route to add incoming data from front-end to the projectData
+app.post('/', function(res, req) {
+    let data = req.body;
+    let newEntry = {
+        temperature = data.temperature,
+        date = data.date,
+        userResponse = data.userResponse
+    }
+    projectData.push(newEntry);
+})
