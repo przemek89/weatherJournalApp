@@ -39,9 +39,9 @@ app.get('/', function(res, req) {
 app.post('/', function(res, req) {
     let data = req.body;
     let newEntry = {
-        temperature = data.temperature,
-        date = data.date,
-        userResponse = data.userResponse
+        temperature: data.temperature,
+        date: data.date,
+        userResponse: data.userResponse
     }
     projectData.push(newEntry);
 })
