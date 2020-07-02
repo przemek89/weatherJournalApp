@@ -39,7 +39,7 @@ app.get('/', function(res, req) {
 app.post('/', function(res, req) {
     let data = req.body;
     let newEntry = {
-        temperature: data.temperature,
+        temperature: data.temp,
         date: data.date,
         userResponse: data.userResponse
     }

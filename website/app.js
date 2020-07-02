@@ -9,10 +9,6 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
 // Async GET request to OWM API
 const getData = async (url) => {
-    zip_code = document.querySelector('#zip').value;
-    console.log(zip_code);
-    url = `api.openweathermap.org/data/2.5/weather?zip=${zip_code},CH&appid=${api_key}`;
-    console.log(url);
     const res = await fetch(url)
     try {
         const data = await res.json();
@@ -23,10 +19,29 @@ const getData = async (url) => {
     }
 }
 
+// Async POST request to add a new data to the server
+const postData = async (serverUrl = '', data = {}) => {
+    const res = await fetch(serverUrl, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+}
+
 // event listener for Generate button
-// select the zip_code text input element and generate button element
+// select the generate button element
 const generateButton = document.querySelector('#generate');
+
 // add event listener for generate button
 generateButton.addEventListener('click', function getWeatherData() {
-    getData(url);
+    zip_code = document.querySelector('#zip').value;
+    url = `api.openweathermap.org/data/2.5/weather?zip=${zip_code},CH&appid=${api_key}`;
+    let data = getData(url)
+    .then(function(){
+        let userResponse = document.getElementById('feelings').value;
+        postData('/', {temperature: data.temp, date: newDate, userResponse: userResponse })
+    })
 })
