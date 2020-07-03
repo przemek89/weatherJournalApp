@@ -31,7 +31,7 @@ const postData = async (serverUrl = '', data = {}) => {
     });
 
     try {
-        const newData = await res.json();
+        const newData = res;
         console.log(newData);
 		return newData;
 	} catch (error) {
@@ -72,7 +72,7 @@ generateButton.addEventListener('click', function getWeatherData() {
     // after successful retrieval of data post the data to the server
     .then(function(data){
         let userResponse = document.getElementById('feelings').value;
-        postData('http://localhost:8000/', {temperature: data.main.temp, date: newDate, userResponse: userResponse })
+        postData('http://localhost:8000/', {temperature:data.main.temp, date:newDate, userResponse:userResponse})
     })
     // after successful entering of the data to the server, get the latest data and update the DOM
     .then(
