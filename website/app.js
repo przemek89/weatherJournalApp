@@ -12,6 +12,7 @@ const getData = async (url) => {
     const res = await fetch(url)
     try {
         const data = await res.json();
+        console.log(data);
         return data;
     } catch(error) {
         console.log('error', error);
@@ -28,6 +29,35 @@ const postData = async (serverUrl = '', data = {}) => {
         },
         body: JSON.stringify(data)
     });
+
+    try {
+        const newData = await res.json();
+        console.log(newData);
+		return newData;
+	} catch (error) {
+		console.log('error', error);
+	}
+}
+
+// async GET request to the server to get the most recent data and display it in the app
+const updateUI = async () => {
+    const request = await fetch('http://localhost:8000/', {
+		method: 'GET',
+		credentials: 'same-origin',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+    });
+
+    try{
+        const allData = await request.json();
+        // select elements in the HTML and update its content
+        document.getElementById('date').innerHTML = allData[0].date;
+        document.getElementById('temp').innerHTML = allData[0].temperature;
+        document.getElementById('content').innerHTML = allData[0].userResponse;
+    } catch(error) {
+        console.log('error', error);
+    }
 }
 
 // event listener for Generate button
@@ -42,7 +72,10 @@ generateButton.addEventListener('click', function getWeatherData() {
     // after successful retrieval of data post the data to the server
     .then(function(data){
         let userResponse = document.getElementById('feelings').value;
-        postData('/', {temperature: data.main.temp, date: newDate, userResponse: userResponse })
+        postData('http://localhost:8000/', {temperature: data.main.temp, date: newDate, userResponse: userResponse })
     })
     // after successful entering of the data to the server, get the latest data and update the DOM
+    .then(
+        updateUI()
+    )
 })

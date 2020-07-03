@@ -37,11 +37,11 @@ app.get('/', function(res, req) {
 
 // POST route to add incoming data from front-end to the projectData
 app.post('/', function(res, req) {
-    let data = req.body;
+    let newData = req.body;
     let newEntry = {
-        temperature: data.temp,
-        date: data.date,
-        userResponse: data.userResponse
+        temperature: newData.temperature,
+        date: newData.date,
+        userResponse: newData.userResponse
     }
     projectData.push(newEntry);
 })
