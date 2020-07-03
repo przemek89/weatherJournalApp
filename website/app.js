@@ -12,7 +12,6 @@ const getData = async (url) => {
     const res = await fetch(url)
     try {
         const data = await res.json();
-        console.log(data);
         return data;
     } catch(error) {
         console.log('error', error);
@@ -32,7 +31,6 @@ const postData = async (serverUrl = '', data = {}) => {
 
     try {
         const newData = res;
-        console.log(newData);
 		return newData;
 	} catch (error) {
 		console.log('error', error);
@@ -41,7 +39,7 @@ const postData = async (serverUrl = '', data = {}) => {
 
 // async GET request to the server to get the most recent data and display it in the app
 const updateUI = async () => {
-    const request = await fetch('http://localhost:8000/', {
+    const response = await fetch('http://localhost:8000/getData', {
 		method: 'GET',
 		credentials: 'same-origin',
 		headers: {
@@ -50,11 +48,8 @@ const updateUI = async () => {
     });
 
     try{
-        const allData = await request.json();
-        // select elements in the HTML and update its content
-        document.getElementById('date').innerHTML = allData[0].date;
-        document.getElementById('temp').innerHTML = allData[0].temperature;
-        document.getElementById('content').innerHTML = allData[0].userResponse;
+        const allData = await response.json();
+        return allData;
     } catch(error) {
         console.log('error', error);
     }
@@ -67,15 +62,24 @@ const generateButton = document.querySelector('#generate');
 // add event listener for generate button
 generateButton.addEventListener('click', function getWeatherData() {
     zip_code = document.querySelector('#zip').value;
+    let userResponse = document.getElementById('feelings').value;
     url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip_code},CH&appid=${api_key}`;
     getData(url)
     // after successful retrieval of data post the data to the server
-    .then(function(data){
-        let userResponse = document.getElementById('feelings').value;
-        postData('http://localhost:8000/', {temperature:data.main.temp, date:newDate, userResponse:userResponse})
-    })
+        .then(function(data){
+            postData('http://localhost:8000/', {temperature:data.main.temp, date:newDate, userResponse:userResponse})
+        })
     // after successful entering of the data to the server, get the latest data and update the DOM
-    .then(
-        updateUI()
-    )
+        .then(
+            updateUI().then(function(data) {
+                try {
+                // select elements in the HTML and update its content
+                    document.getElementById('date').innerHTML = data.date;
+                    document.getElementById('temp').innerHTML = data.temperature;
+                    document.getElementById('content').innerHTML = data.userResponse
+                } catch(error) {
+                    console.log('error', error);
+                }
+            })
+        )
 })

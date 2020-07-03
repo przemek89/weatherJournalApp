@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 
 // Cors for cross origin allowance
 const cors = require('cors');
+const { setTimeout } = require('timers');
 app.use(cors());
 
 // Initialize the main project folder
@@ -31,17 +32,17 @@ function listening() {
 }
 
 // GET route, which returns the projectData
-app.get('/', function(res, req) {
+app.get('/getData', function(req, res) {
     res.send(projectData);
 })
 
 // POST route to add incoming data from front-end to the projectData
-app.post('/', function(res, req) {
+app.post('/', function(req, res) {
     let newData = req.body;
     let newEntry = {
         temperature: newData.temperature,
         date: newData.date,
         userResponse: newData.userResponse
     }
-    projectData.push(newEntry);
+    Object.assign(projectData, newEntry);
 })
