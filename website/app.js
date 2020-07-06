@@ -30,7 +30,7 @@ const postData = async (serverUrl = '', data = {}) => {
     });
 
     try {
-        const newData = res;
+        const newData = await res.json();
 		return newData;
 	} catch (error) {
 		console.log('error', error);
@@ -67,16 +67,18 @@ generateButton.addEventListener('click', function getWeatherData() {
     getData(url)
         .then(function(data){
             postData('http://localhost:8000/', {temperature:data.main.temp, date:newDate, userResponse:userResponse})
-        }).then(
-                updateUI().then(function(data) {
-                    try {
-                    // select elements in the HTML and update its content
-                        document.getElementById('date').innerHTML = data.date;
-                        document.getElementById('temp').innerHTML = data.temperature;
-                        document.getElementById('content').innerHTML = data.userResponse
-                    } catch(error) {
-                        console.log('error', error);
-                    }
-                })
-            )
+                .then(
+                    updateUI().then(
+                        function(data) {
+                            try {
+                                // select elements in the HTML and update its content
+                                document.getElementById('date').innerHTML = data.date;
+                                document.getElementById('temp').innerHTML = data.temperature;
+                                document.getElementById('content').innerHTML = data.userResponse
+                            } catch(error) {
+                                console.log('error', error);
+                            }
+                        })
+                )
+            })
 })
