@@ -65,21 +65,18 @@ generateButton.addEventListener('click', function getWeatherData() {
     let userResponse = document.getElementById('feelings').value;
     url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip_code},CH&appid=${api_key}`;
     getData(url)
-    // after successful retrieval of data post the data to the server
         .then(function(data){
             postData('http://localhost:8000/', {temperature:data.main.temp, date:newDate, userResponse:userResponse})
-        })
-    // after successful entering of the data to the server, get the latest data and update the DOM
-        .then(
-            updateUI().then(function(data) {
-                try {
-                // select elements in the HTML and update its content
-                    document.getElementById('date').innerHTML = data.date;
-                    document.getElementById('temp').innerHTML = data.temperature;
-                    document.getElementById('content').innerHTML = data.userResponse
-                } catch(error) {
-                    console.log('error', error);
-                }
-            })
-        )
+        }).then(
+                updateUI().then(function(data) {
+                    try {
+                    // select elements in the HTML and update its content
+                        document.getElementById('date').innerHTML = data.date;
+                        document.getElementById('temp').innerHTML = data.temperature;
+                        document.getElementById('content').innerHTML = data.userResponse
+                    } catch(error) {
+                        console.log('error', error);
+                    }
+                })
+            )
 })
